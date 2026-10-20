@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-900 text-slate-100"><head>
+  <!-- Cho phép ẩn thanh điều hướng Safari khi chạy ở chế độ Web App -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tên Ứng Dụng">
+
+<!-- Thêm icon riêng cho ứng dụng ngoài màn hình chính (tuỳ chọn) -->
+<link rel="apple-touch-icon" href="duong-dan-anh-icon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Hệ Thống Quản Lý Prompt Trang Phục Thông Minh</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+  </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }</style></head>
+<body class="h-full flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed top-4 left-4 right-4 sm:left-auto sm:right-5 z-50 transform transition-all duration-300 ease-out flex items-center justify-center sm:justify-start gap-3 bg-indigo-600 text-white px-4 py-3 rounded-2xl shadow-2xl border border-indigo-400/30 translate-y-[-120px] opacity-0">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 shrink-0"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
+    <span id="toast-message" class="font-medium text-sm text-center sm:text-left">Đã sao chép thành công!</span>
+  </div>
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center justify-between w-full sm:w-auto">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 bg-indigo-600/20 text-indigo-400 rounded-xl border border-indigo-500/30 shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path></svg>
+          </div>
+          <div>
+            <h1 class="font-bold text-base sm:text-lg leading-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">Prompt Vault</h1>
+            <p class="text-[11px] text-slate-400 hidden sm:block">Quản lý &amp; Phân tích trang phục AI</p>
+          </div>
+        </div>
+        <!-- Nút thêm prompt dạng icon trên mobile cho gọn -->
+        <button onclick="openModal()" class="sm:hidden flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white p-2.5 rounded-xl shadow-lg shadow-indigo-600/20 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+        </button>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+        <button onclick="copyQuanTatPrompt()" class="shrink-0 flex items-center gap-1 bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white text-xs font-semibold px-3 py-2 rounded-xl border border-rose-500/30 transition">
+          <span>Quần tất</span>
+        </button>
+        <button onclick="copyCrocsPrompt()" class="shrink-0 flex items-center gap-1 bg-amber-600/20 hover:bg-amber-600 text-amber-300 hover:text-white text-xs font-semibold px-3 py-2 rounded-xl border border-amber-500/30 transition">
+          <span>Crocs</span>
+        </button>
+        <button onclick="copyGiayCaoGotPrompt()" class="shrink-0 flex items-center gap-1 bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white text-xs font-semibold px-3 py-2 rounded-xl border border-purple-500/30 transition">
+          <span>Giày gót đen</span>
+        </button>
+        <button onclick="exportSelfContainedHTML()" class="shrink-0 flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium px-3 py-2 rounded-xl border border-slate-700 transition">
+          <span>Xuất HTML</span>
+        </button>
+        <button onclick="openModal()" class="hidden sm:flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-lg shadow-indigo-600/20 transition">
+          <span>+ Thêm Prompt</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
+    <div class="bg-slate-800/60 backdrop-blur rounded-2xl p-3.5 sm:p-4 border border-slate-700/60 shadow-xl space-y-3">
+      <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+        <div class="relative flex-1">
+          <input type="text" id="search-input" oninput="handleSearchOrFilter()" placeholder="Tìm kiếm mô tả, prompt..." class="w-full pl-3.5 pr-3.5 py-2.5 bg-slate-900/80 border border-slate-700 rounded-xl text-sm focus:outline-none focus:border-indigo-500 text-slate-200 placeholder-slate-500">
+        </div>
+        <button onclick="clearFilters()" class="text-xs text-indigo-400 hover:text-indigo-300 font-medium py-1 self-end sm:self-center">Xóa bộ lọc</button>
+      </div>
+      <div>
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1">
+          <button id="btn-filter-fav" onclick="toggleFavoriteFilter()" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 bg-slate-900/90 text-slate-300 border border-slate-700/75">
+            <span>❤️ Đã thích</span>
+            <span id="fav-count-badge" class="text-[10px] opacity-75 bg-slate-800 px-1.5 py-0.5 rounded-full">0</span>
+          </button>
+          <div class="h-4 w-px bg-slate-700 shrink-0 mx-0.5"></div>
+          <div id="tag-cloud" class="flex items-center gap-1.5 overflow-x-auto pr-1"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between text-xs sm:text-sm text-slate-400 px-1">
+      <div id="prompt-count">Hiển thị 0 / 0 prompt</div>
+    </div>
+
+    <div id="prompt-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"></div>
+    <div id="pagination-container" class="flex justify-center items-center gap-1.5 sm:gap-2 pt-4 pb-6"></div>
+
+    <div id="empty-state" class="hidden text-center py-12 sm:py-16 bg-slate-800/30 rounded-2xl border border-dashed border-slate-700">
+      <h3 class="text-sm sm:text-base font-semibold text-slate-300">Không tìm thấy Prompt nào</h3>
+    </div>
+  </main>
+
+  <!-- Modal Form -->
+  <div id="prompt-modal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto">
+    <div class="bg-slate-900 border-t sm:border border-slate-700 rounded-t-3xl sm:rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between px-5 py-4 border-b border-slate-800 bg-slate-900/50 shrink-0">
+        <h2 id="modal-title" class="text-base sm:text-lg font-bold text-slate-100">Thêm Prompt Mới</h2>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-200 p-1">✕</button>
+      </div>
+      <form id="prompt-form" onsubmit="savePrompt(event)" class="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1">
+        <input type="hidden" id="prompt-id">
+        <div class="space-y-1.5">
+          <label class="block text-xs sm:text-sm font-semibold text-slate-200">Nội dung Prompt Chi Tiết *</label>
+          <textarea id="form-full-prompt" required rows="5" oninput="handlePromptInput()" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs sm:text-sm text-slate-100 font-mono" placeholder="Dán prompt chi tiết vào đây, hệ thống sẽ tự động phân tích..."></textarea>
+        </div>
+        <div class="space-y-1.5">
+          <label class="block text-xs sm:text-sm font-semibold text-slate-200">Mô tả ngắn trang phục (Tự động)</label>
+          <input type="text" id="form-short-desc" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs sm:text-sm text-slate-100">
+        </div>
+        <div class="space-y-1.5">
+          <label class="block text-xs sm:text-sm font-semibold text-slate-200">Thẻ Tag (Tự động phân tách)</label>
+          <input type="text" id="form-tags" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs sm:text-sm text-slate-100">
+        </div>
+        <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-800 shrink-0">
+          <button type="button" onclick="closeModal()" class="px-4 py-2.5 bg-slate-800 text-slate-300 text-xs sm:text-sm font-medium rounded-xl">Hủy</button>
+          <button type="submit" class="px-5 py-2.5 bg-indigo-600 text-white text-xs sm:text-sm font-semibold rounded-xl">Lưu Prompt</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const INITIAL_PROMPTS = [
+      {
+        "id": "p_1792393598707",
+        "isFavorite": false,
+        "fullPrompt": "tỉ lệ khung hình 9:16 Tạo 4 ảnh 4 tư thế khác nhau phải trái trên dưới, đứng ngồi, xóa chữ biểu tượng trong ảnh, khôi phục những chi tiết bị mờ nhòe\n# PROMPT MÔ TẢ TRANG PHỤC – ULTRA-PHOTOREALISTIC 8K – DỌC 9:16\n\n**1. Áo sơ mi trắng dáng rộng mặc kiểu lệch vai**\n\nCô gái mặc một chiếc áo sơ mi nữ màu trắng tinh, dáng rộng kiểu oversized, chiều dài qua hông và gần giữa đùi, được tạo kiểu như một chiếc sơ mi dáng dài. Chất liệu vải cotton pha mềm mại, mỏng vừa phải, bề mặt mịn với độ bóng nhẹ tự nhiên, không xuyên thấu quá mức.\n\nÁo có cổ bẻ truyền thống, hàng cúc trắng nhỏ chạy dọc chính giữa thân áo. Thiết kế tay dài rộng rãi, vai áo trễ nhẹ, phần cổ áo mở rộng và trượt xuống một bên vai, để lộ đường vai tự nhiên. Thân áo buông lỏng theo cơ thể, không bó sát, tạo những nếp gấp mềm mại tại khuỷu tay, eo, thân trước và phần gấu áo.\n\nCổ tay áo dài, có măng sét bản vừa và cúc cài màu trắng. Phần gấu áo cong nhẹ, hai vạt trước tạo đường xẻ nhỏ ở chính giữa phía dưới. Vải có các nếp nhăn nhỏ chân thực, thể hiện độ mềm và độ rủ tự nhiên. Tổng thể mang phong cách tối giản, thanh lịch, nhẹ nhàng.\n\n**2. Tất dài màu trắng cao quá gối**\n\nCô gái mang một đôi tất dài màu trắng ngà, kéo cao đến phần đùi ngay phía trên đầu gối. Tất có thiết kế ôm sát chân, chất liệu dệt kim co giãn mềm mại, độ dày vừa phải, không xuyên thấu.\n\nBề mặt tất có các đường gân dệt dọc nhỏ, chạy đều từ phần viền trên xuống đến bàn chân. Phần viền trên có bo chun đàn hồi nhẹ, ôm vừa vặn đùi, mép tất phẳng và gọn gàng. Chất liệu vải thể hiện rõ kết cấu sợi dệt, các nếp nhăn ngang nhỏ xuất hiện tự nhiên tại đầu gối, cổ chân và mu bàn chân. Màu trắng đồng nhất, không có logo, chữ in hoặc họa tiết trang trí.\n\nTất bao phủ toàn bộ bàn chân, phần mũi tất bo tròn tự nhiên, không có giày dép bên ngoài. Hai chiếc tất cân đối về chiều dài, màu sắc và độ ôm.\n\n**3. Phụ kiện**\n\nCô gái cầm điện thoại thông minh màu trắng bạc, cụm camera sau gồm ba ống kính màu đen, thiết kế hiện đại. Đeo một sợi dây chuyền bạc mảnh với mặt dây nhỏ tinh tế và đôi khuyên tai nhỏ tối giản.\n\n**4. Phong cách tổng thể**\n\nPhong cách thời trang nữ tối giản, nhẹ nhàng, hiện đại, với bảng màu chủ đạo trắng và trắng ngà. Áo sơ mi dáng rộng kết hợp tất dài cao quá gối tạo nên tổng thể đồng nhất, mềm mại và thanh lịch. Trang phục có độ rủ tự nhiên, không quá cứng, không xuất hiện chi tiết trang trí không cần thiết.\n\n**5. Chất lượng hình ảnh**\n\nUltra-photorealistic, 8K, high-end fashion photography, realistic cotton texture, detailed knitted fabric, natural fabric folds, accurate white balance, realistic skin texture, soft warm indoor lighting, natural shadows, sharp focus, realistic proportions, cinematic color grading nhẹ.\n\n**6. Yêu cầu khi chỉnh sửa ảnh tham chiếu**\n\nSử dụng ảnh tham chiếu làm nguồn chính. Giữ nguyên nhân vật, khuôn mặt, kiểu tóc đen dài, biểu cảm, tư thế selfie trước gương, điện thoại, tỷ lệ cơ thể và góc chụp. Giữ nguyên bối cảnh phòng ngủ với giường ga trắng, rèm màu be, sàn gỗ sáng và ánh đèn vàng ấm. Chỉ tái tạo trang phục theo mô tả: áo sơ mi trắng oversized mặc lệch vai và tất trắng dài cao quá gối. Bảo toàn các chi tiết không được yêu cầu thay đổi, đảm bảo vải và tất có kết cấu chân thực như ảnh chụp người thật.\n\n**Negative prompt:** áo sơ mi màu khác, áo crop top, áo bó sát, chân váy, quần short, tất đen, tất ngắn cổ, tất có họa tiết, giày cao gót, giày thể thao, vải nhựa giả tạo, da nhựa, biến dạng cơ thể, chân tay méo mó, thừa ngón chân, tất nhăn bất thường, sai tỷ lệ cơ thể, thay đổi khuôn mặt, đổi kiểu tóc, thay đổi bối cảnh, hoạt hình, CGI, tranh vẽ, ảnh mờ, watermark, logo không mong muốn.",
+        "shortDesc": "Áo sơ mi trắng dáng rộng mặc lệch vai kết hợp tất dài trắng cao quá gối.",
+        "tags": ["Sơ mi", "Trắng", "Photorealistic"]
+      },
+      {
+        "id": "p_1792393534699",
+        "isFavorite": false,
+        "fullPrompt": "tỉ lệ khung hình 9:16 Tạo 4 ảnh 4 tư thế khác nhau phải trái trên dưới, đứng ngồi, xóa chữ biểu tượng trong ảnh, khôi phục những chi tiết bị mờ nhòe\n# PROMPT MÔ TẢ TRANG PHỤC – ULTRA-PHOTOREALISTIC 8K\n\n**1. Áo sơ mi trắng dài tay**\n\nÁo sơ mi nữ màu trắng, thiết kế cổ bẻ truyền thống, tay dài, phom áo ôm vừa vặn cơ thể. Chất liệu vải mỏng nhẹ, mềm mại, hơi xuyên thấu dưới ánh sáng, có độ bóng nhẹ tự nhiên. Hàng cúc nhỏ màu trắng chạy dọc chính giữa thân áo. Phần vai được may gọn gàng, tay áo dài ôm nhẹ cánh tay, cổ tay có măng sét cài cúc. Áo được sơ vin một phần vào chân váy, phần gấu áo buông nhẹ tạo nếp gấp tự nhiên quanh eo. Bề mặt vải có những nếp nhăn nhỏ chân thực tại khuỷu tay, ngực, eo và vùng bụng, thể hiện rõ chất liệu vải mỏng nhưng vẫn giữ phom dáng thanh lịch.\n\n**2. Cà vạt màu đen**\n\nCà vạt nữ màu đen tuyền, kiểu dáng cổ điển, bản vừa, thắt nút gọn ngay dưới cổ áo sơ mi. Phần thân cà vạt thuôn dài, hơi mở rộng về phía dưới, kết thúc ở vùng bụng trên gần cạp váy. Chất liệu vải mịn, có độ bóng satin nhẹ, tạo điểm nhấn tương phản với áo sơ mi trắng. Cà vạt buông thẳng tự nhiên, có nếp gấp và bóng đổ nhẹ theo chuyển động cơ thể.\n\n**3. Chân váy ngắn màu đen**\n\nChân váy nữ màu đen tuyền, kiểu chân váy mini ôm sát dáng, cạp cao ngang eo. Thiết kế tối giản, không họa tiết, không túi nổi, không xếp ly. Chất liệu vải dệt co giãn vừa phải, bề mặt mịn, hơi lì, giữ phom tốt. Phần thân váy ôm gọn vòng eo và hông, đường may tinh tế, tạo các nếp vải ngang nhẹ tự nhiên tại vùng hông và đùi. Gấu váy ngắn trên đùi, được may thẳng và gọn gàng, tổng thể mang phong cách công sở hiện đại pha nét thời trang đường phố.\n\n**4. Túi xách nữ màu đen bóng**\n\nTúi xách nữ cỡ vừa màu đen bóng, kiểu túi đeo vai với quai dài màu đen. Chất liệu da bóng hoặc da tổng hợp cao cấp, bề mặt phản chiếu ánh sáng thành các dải sáng mềm mại. Túi có phom dáng mềm, phần thân hơi nhún tự nhiên, các đường may rõ nét và chi tiết kim loại nhỏ màu bạc. Quai túi chắc chắn, được đeo trên một bên vai và giữ bằng tay, tạo cảm giác tự nhiên khi bước đi.\n\n**5. Giày cao gót đen bóng**\n\nĐôi giày cao gót nữ màu đen tuyền, thiết kế mũi nhọn thanh lịch, kiểu pump cổ điển với phần gót cao, mảnh. Chất liệu da bóng phản chiếu ánh sáng tự nhiên, bề mặt nhẵn mịn, đường viền giày sắc nét. Giày ôm vừa bàn chân, tỷ lệ cân đối với cơ thể, tạo vẻ ngoài thanh lịch và hiện đại. Phần gót và mũi giày có hình dáng rõ ràng, không biến dạng, không thêm logo thương hiệu.\n\n**6. Phong cách tổng thể**\n\nPhong cách thời trang công sở hiện đại kết hợp street fashion về đêm. Bảng màu chủ đạo gồm trắng và đen, tạo độ tương phản rõ nét. Bộ trang phục mang vẻ thanh lịch, tối giản, trẻ trung và thời thượng. Từng chi tiết vải, đường may, nếp gấp, độ bóng của túi xách và giày được tái hiện chân thực như ảnh chụp thời trang chuyên nghiệp.\n\n**7. Chất lượng hình ảnh và yêu cầu chỉnh sửa**\n\nUltra-photorealistic, 8K, high-end commercial fashion photography, realistic fabric texture, natural skin texture, detailed stitching, realistic glossy leather reflections, cinematic nighttime lighting, soft ambient light, realistic shadows, sharp focus, natural body proportions.\n\nSử dụng ảnh tham chiếu làm nguồn chính. Giữ nguyên nhân vật, khuôn mặt, kiểu tóc, biểu cảm, tư thế bước đi, tỷ lệ cơ thể, góc chụp và bối cảnh đường phố ban đêm. Chỉ tái tạo trang phục theo mô tả: áo sơ mi trắng dài tay, cà vạt đen, chân váy mini đen ôm sát, túi xách đen bóng và giày cao gót đen bóng. Duy trì ánh sáng biển hiệu và hiệu ứng bokeh phía sau, bảo đảm trang phục hòa hợp với môi trường thực tế.\n\n**Negative prompt:** áo sai màu, cà vạt màu sáng, chân váy xếp ly, chân váy dài, quần dài, giày thể thao, dép sandal, túi xách sai màu, da nhựa, hiệu ứng CGI, hoạt hình, tranh vẽ, tỷ lệ cơ thể sai, tay chân méo mó, giày biến dạng, nếp vải bất thường, ánh sáng giả tạo, hình ảnh mờ, độ phân giải thấp, watermark, chữ hoặc logo không mong muốn.",
+        "shortDesc": "Áo sơ mi trắng kết hợp cà vạt đen, chân váy ngắn và giày cao gót bóng.",
+        "tags": ["Sơ mi", "Chân váy", "Váy ngắn", "Giày cao gót", "Trắng", "Đen", "Công sở", "Photorealistic"]
+      },
+      {
+        "id": "p1",
+        "isFavorite": false,
+        "shortDesc": "Áo sơ mi trắng satin cao cấp kết hợp chân váy ngắn đen ôm sát có xẻ hông, quần tất đen bóng và giày cao gót",
+        "tags": ["Sơ mi", "Satin", "Chân váy", "Mini skirt", "Quần tất đen", "Giày cao gót", "Công sở"],
+        "fullPrompt": "tỉ lệ khung hình 9:16 tạo 4 ảnh 4 góc chụp khác nhau phải trái trên dưới, đứng ngồi, xóa chữ biểu tượng trong ảnh, khôi phục những chị tiết bị mờ nhòe. Thay trang phục của cô gái trong ảnh bằng bộ trang phục gồm: Áo sơ mi nữ màu trắng: chất liệu satin cao cấp mềm mại, bề mặt mịn, có độ bóng nhẹ tự nhiên; cổ áo sơ mi nhọn thanh lịch, tay dài, cổ tay có măng-sét; áo ôm vừa vặn theo vóc dáng, có nếp gấp vải chân thực. Phần cổ áo mở vài cúc phía trên tạo vẻ nữ tính, quyến rũ nhưng vẫn tinh tế. Chân váy ngắn màu đen, dáng ôm: Chân váy cạp cao, ôm sát vừa vặn theo vòng eo và hông, chất liệu vải đen mịn, hơi co giãn, bề mặt lì sang trọng. Chiều dài váy cực kỳ quan trọng: gấu váy nằm ở khoảng 1/4 trên của đùi, cách nếp gấp háng khoảng 8–12 cm theo chiều dọc, tương đương kiểu mini skirt ngắn trên đùi. Khi cô gái đứng thẳng, gấu váy nằm cao hơn điểm giữa đùi rõ rệt, không kéo dài xuống gần đầu gối, không biến thành chân váy dài ngang đùi giữa. Phần thân trước có độ dài vừa đủ để che phủ tự nhiên, gấu váy gần như ngang, hơi ôm theo đường cong hông và đùi. Một đường xẻ bên hông cao vừa phải, bắt đầu từ gấu váy và kéo lên một đoạn ngắn, tạo nét thanh lịch, giúp váy chuyển động tự nhiên mà không làm thay đổi kiểu dáng tổng thể. Giữ nguyên tỷ lệ váy ngắn so với cơ thể trong ảnh tham chiếu; không tự ý tăng chiều dài váy, không biến thành váy chữ A hoặc váy xếp ly. Đường may sắc nét, nếp vải chân thực, không xuyên thấu, không méo mó khi cơ thể tạo dáng. Quần tất đen bóng: quần tất mỏng, ôm sát toàn bộ hai chân, màu đen khói trong nhẹ, bề mặt mượt với độ bóng satin vừa phải, phản chiếu ánh sáng mềm mại theo đường cong chân. Chất liệu tất chân chân thực, liền mạch, không bị nhăn bất thường, không quá dày và không bóng như nhựa. Giày cao gót đen bóng có dây: giày cao gót nữ kiểu thanh lịch, màu đen bóng như da patent leather, mũi giày thon gọn, gót cao thanh mảnh; thiết kế quai mảnh ôm cổ chân hoặc quai chữ T có dây cài nhỏ, khóa kim loại tinh tế. Bề mặt giày phản chiếu ánh sáng chân thực, rõ hình dáng và đầy đủ hai chiếc giày. Yêu cầu khi áp dụng lên ảnh khác: Giữ nguyên 100% danh tính, khuôn mặt, biểu cảm, kiểu tóc, màu da tự nhiên, vóc dáng, tỷ lệ cơ thể và tư thế ban đầu của cô gái. Giữ nguyên vị trí tay, chân, góc chụp, hướng nhìn, ánh sáng và phông nền gốc. Chỉ thay đổi trang phục và bổ sung giày cao gót theo mô tả trên. Trang phục phải khớp chính xác với tư thế cơ thể, có nếp vải, đường may, độ ôm và bóng đổ tự nhiên. Phong cách ảnh chụp thương mại cao cấp, ultra-photorealistic, chi tiết sắc nét 4K–8K, chất liệu vải và da chân chân thực, ánh sáng mềm tự nhiên, màu sắc trung thực, không làm mịn quá mức, không tạo cảm giác ảnh AI, không biến dạng bàn tay, chân, giày hoặc cơ thể. Giữ nguyên tỷ lệ khung hình của ảnh đầu vào. xóa túi đeo"
+      },
+      {
+        "id": "p2",
+        "isFavorite": false,
+        "shortDesc": "Váy mini tiểu thư lãng mạn màu đỏ rượu vang (burgundy) ren xòe phồng nhiều tầng kết hợp giày cao gót đen bóng",
+        "tags": ["Váy mini", "Ren", "Đỏ đô", "Burgundy", "Nhiều tầng", "Búp bê", "Giày cao gót"],
+        "fullPrompt": "tỉ lệ khung hình 9:16 TRANG PHỤC: VÁY MINI REN ĐỎ ĐÔ NHIỀU TẦNG + GIÀY CAO GÓT ĐEN BÓNG CÓ DÂY\nThay trang phục của cô gái trong ảnh bằng một bộ váy mini nữ tính màu đỏ rượu vang (burgundy), phong cách tiểu thư lãng mạn, kết hợp giày cao gót màu đen bóng có quai dây thanh mảnh.\n1. Phần thân trên của váy\nVáy không tay, thiết kế quây ngực không có dây vai, ôm sát phần ngực và thân trên. Chất liệu ren đỏ đô mỏng với hoa văn dệt nổi tinh tế, có lớp lót bên trong để tạo độ che phủ tự nhiên. Mép trên của thân váy có đường viền ren gợn sóng nhỏ. Phần thân áo ôm gọn vòng eo, có nhiều nếp nhún ngang nhẹ, tạo cảm giác mềm mại và vừa vặn. Màu đỏ rượu vang đậm đồng nhất, không chuyển thành đỏ tươi hoặc hồng.\n2. Phần chân váy — mô tả độ dài thật chính xác\nChân váy mini cực ngắn, dáng xòe phồng nhiều tầng, làm hoàn toàn từ ren đỏ đô. Váy bắt đầu xòe từ phần eo, tạo dáng váy búp bê (tiered ruffle mini dress), với khoảng 4–6 tầng ren xếp chồng lên nhau. Mỗi tầng có mép ren bèo nhún, viền lượn sóng tự nhiên, chất liệu mỏng nhẹ và có độ xuyên sáng nhẹ ở phần ren không có lớp lót.\nĐộ dài bắt buộc: gấu váy nằm ở khoảng trên của đùi, ngay dưới mông một khoảng ngắn. Khi cô gái đứng thẳng, mép váy ngắn hơn rõ rệt so với điểm giữa đùi và nằm cách nếp gấp háng khoảng 5–10 cm theo chiều dọc, tùy tư thế và tỷ lệ cơ thể. Tổng chiều dài phần chân váy tính từ đường eo đến gấu váy khoảng 25–30 cm trên cơ thể người trưởng thành có tỷ lệ trung bình. Váy phải giữ đúng kiểu mini skirt rất ngắn như ảnh tham chiếu, không kéo dài đến giữa đùi, không chạm đầu gối, không biến thành váy ngang gối hoặc váy midi.\nCác tầng ren xòe rộng theo chiều ngang, tạo độ phồng bồng bềnh quanh hông và đùi trên. Gấu váy không phẳng hoặc ôm sát chân mà có nhiều lớp bèo ren chồng lên nhau, đường viền không đều nhẹ do cấu trúc vải mềm. Khi cơ thể nghiêng hoặc xoay, các tầng ren rủ xuống và xòe tự nhiên theo trọng lực. Giữ tỷ lệ giữa thân áo ôm sát và chân váy ngắn xòe phồng như ảnh tham chiếu.\nLớp lót bên trong ngắn gọn, cùng tông màu đỏ đô hoặc màu nude phù hợp, đảm bảo váy trông như một trang phục hoàn chỉnh được may thật. Không tạo thêm quần short ngoài váy, không thêm lớp váy dài bên dưới, không thay đổi thiết kế nhiều tầng thành váy xếp ly đồng phục.\n3. Giày cao gót đen bóng có dây\nMang giày cao gót nữ màu đen bóng kiểu patent leather, bề mặt da bóng phản chiếu ánh sáng tự nhiên. Gót cao thanh mảnh khoảng 8–10 cm, mũi giày thuôn gọn. Thiết kế có quai mảnh vòng quanh cổ chân, dây cài nhỏ với khóa kim loại tinh tế; có thể kết hợp thêm quai chữ T chạy dọc mu bàn chân. Giày vừa vặn, có hình dáng và cấu trúc rõ ràng, đủ cả hai chiếc. Độ bóng sang trọng, không bóng như nhựa, không biến dạng dây quai hoặc gót giày.\n4. Yêu cầu giữ nguyên ảnh gốc\nChỉ thay đổi trang phục và bổ sung giày cao gót. Giữ nguyên danh tính, khuôn mặt, biểu cảm, màu da, kiểu tóc, phụ kiện tóc, vóc dáng, tỷ lệ cơ thể, tư thế, hướng nhìn, góc chụp, ánh sáng và bối cảnh của ảnh đầu vào. Không tự ý thay đổi dáng người hoặc phóng đại tỷ lệ cơ thể.\nẢnh chân thực như chụp bằng máy ảnh chuyên nghiệp, ultra-photorealistic, độ phân giải cao 4K–8K, chi tiết ren rõ ràng, các lớp vải tách biệt tự nhiên, đường may chân thực, bóng đổ phù hợp với ánh sáng môi trường, màu đỏ đô chuẩn xác, da giữ kết cấu tự nhiên, không làm mịn quá mức, không tạo vẻ ngoài nhân tạo. Giữ nguyên tỷ lệ khung hình ảnh đầu vào.\ntạo 4 ảnh 4 tư thế khác nhau phải trái trên dưới, đứng ngồi, xóa chữ biểu tượng trong ảnh, khôi phục những chị tiết bị mờ nhòe"
+      },
+      {
+        "id": "p3",
+        "isFavorite": false,
+        "shortDesc": "Váy mini hai dây satin cao cấp màu đỏ mận pha hồng tím (magenta burgundy) ôm sát bodycon có đường xẻ tà ngắn",
+        "tags": ["Váy mini", "Bodycon", "Hai dây", "Satin", "Đỏ mận", "Hồng tím", "Xẻ tà"],
+        "fullPrompt": "tỉ lệ khung hình 9:16 tạo 4 ảnh 4 tư thế khác nhau phải trái trên dưới, đứng ngồi, xóa chữ biểu tượng trong ảnh, khôi phục những chị tiết bị mờ nhòe\n# PROMPT MÔ TẢ CHÍNH XÁC BỘ TRANG PHỤC\n\nTái tạo chính xác chiếc **váy mini hai dây màu đỏ mận pha hồng tím (magenta burgundy)** trong ảnh tham chiếu, theo phong cách thời trang nữ cao cấp, chất liệu satin bóng mềm mại, đường cắt may tinh tế và phom dáng ôm sát cơ thể.\n\n**1. Màu sắc và chất liệu vải**\nChiếc váy có màu đỏ mận pha hồng tím đậm, sắc độ nổi bật nhưng không quá chói. Chất liệu satin mịn, có độ bóng rõ dưới ánh sáng, tạo các dải phản chiếu sáng tối tự nhiên trên bề mặt vải. Bề mặt không có họa tiết, không in hoa, không đính đá. Vải mềm, có độ co giãn nhẹ, ôm sát cơ thể và tạo nhiều nếp gấp ngang tự nhiên ở phần ngực, eo, bụng và hông.\n\n**2. Thiết kế hai dây vai**\nVáy không tay, sử dụng hai dây vai mảnh cùng màu với thân váy. Dây có bản nhỏ, bề mặt satin đồng bộ, nối từ phần thân ngực lên vai. Dây nằm sát vai, tạo vẻ thanh mảnh và để lộ hoàn toàn phần vai, xương quai xanh cùng cánh tay. Dây bên trái trong ảnh chạy gần như thẳng từ vai xuống mép trên thân ngực; dây còn lại được nối với phần cúp ngực phía đối diện.\n\n**3. Phần ngực và đường cổ váy**\nPhần ngực được thiết kế theo kiểu cúp ngực mềm, kết hợp cổ chữ V sâu vừa phải và đường vắt chéo kiểu quấn chéo (wrap-front). Hai mảng vải satin chồng lên nhau theo đường chéo trước ngực, tạo thành các nếp gấp xếp lớp rõ nét.\nPhần cúp ngực có đường cong ôm theo hình dáng tự nhiên, mép trên hơi lượn cong. Vải được nhún nhẹ và xếp nếp ngang ở phần trước ngực, tạo hiệu ứng nhiều lớp satin. Không có cổ áo, tay áo, ren hoặc chi tiết trang trí riêng biệt.\n\n**4. Phần thân trên và eo váy**\nThân váy ôm sát từ dưới ngực xuống eo, có thiết kế chiết eo rõ ràng. Phần vải ở hai bên sườn được kéo ôm vào trong để tạo phom đồng hồ cát. Các đường ráp và nếp nhún chạy theo chiều ngang, tập trung ở vùng eo và bụng trên. Bề mặt satin xuất hiện những nếp gấp nhỏ, mềm, đan xen giữa vùng sáng bóng và vùng tối, thể hiện đúng độ rủ của chất liệu.\nPhần eo không có thắt lưng rời, không có khóa kéo lộ ra ngoài và không có phụ kiện trang trí.\n\n**5. Phần hông và chân váy mini**\nChân váy có chiều dài mini, ôm sát hông và đùi trên. Phần thân dưới tiếp nối liền mạch với thân trên, giữ nguyên màu đỏ mận pha hồng tím. Vải được kéo nhún thành nhiều nếp ngang không đều, chạy dọc từ hông xuống gấu váy. Các nếp nhún tạo hiệu ứng xếp lớp tự nhiên, giúp bề mặt váy có chiều sâu và độ bóng đa dạng.\nHai bên hông có những đường nhún dọc nhẹ, rõ hơn ở phía bên trái ảnh. Phần gấu váy hơi lượn theo các nếp vải, không phải đường cắt ngang hoàn toàn phẳng.\n\n**6. Đường xẻ tà**\nVáy có một đường xẻ ngắn ở phía trước, lệch về bên trái ảnh, bắt đầu từ gần gấu váy và chạy lên một đoạn ở phần đùi trên. Đường xẻ tạo khe mở tự nhiên giữa hai mép vải, đồng thời kết hợp với phần nhún dọc ở hông. Mép xẻ cùng màu với váy, được hoàn thiện gọn gàng, không có viền màu tương phản.\n\n**7. Phom dáng tổng thể**\nĐây là váy mini hai dây kiểu bodycon, ôm sát từ ngực đến hông và đùi trên. Điểm đặc trưng là phần ngực quấn chéo xếp lớp, dây vai mảnh, eo chiết gọn, chất satin bóng và các đường nhún ngang dày đặc ở thân váy. Thiết kế không có tay, không có cổ áo, không có chân váy xếp ly và không có phần vải xòe rộng.\n\n**YÊU CẦU TẠO:** Giữ chính xác màu đỏ mận pha hồng tím, chất satin bóng mềm, cấu trúc cổ chữ V quấn chéo, hai dây vai mảnh, đường nhún ngang ở ngực và thân váy, phom ôm sát, chiều dài mini và đường xẻ ngắn lệch bên. Tái hiện chân thực độ bóng của satin, các nếp gấp, đường may và độ co giãn của vải. Chất lượng ảnh thời trang siêu chân thực, độ chi tiết cao 8K."
+      }
+    ];
+
+    const STORAGE_KEY = "SMART_OUTFIT_PROMPTS_V4_916";
+    let prompts = [];
+    let selectedTag = null;
+    let filterFavoriteOnly = false;
+    let currentPage = 1;
+    const ITEMS_PER_PAGE = 10;
+
+    const KEYWORD_RULES = [
+      { regex: /sơ mi|shirt|button-up|blouse/i, tag: "Sơ mi", descVi: "áo sơ mi" },
+      { regex: /áo phông|t-shirt|tee/i, tag: "Áo phông", descVi: "áo phông đơn giản" },
+      { regex: /crop top|croptop/i, tag: "Crop top", descVi: "áo crop top" },
+      { regex: /chân váy|skirt|pencil skirt/i, tag: "Chân váy", descVi: "chân váy" },
+      { regex: /váy xếp ly|pleated skirt/i, tag: "Váy xếp ly", descVi: "chân váy xếp ly" },
+      { regex: /váy ngắn|mini skirt|miniskirt/i, tag: "Váy ngắn", descVi: "chân váy ngắn" },
+      { regex: /đầm|dạ hội|evening gown|gown|dress/i, tag: "Đầm dạ hội", descVi: "đầm trang nhã" },
+      { regex: /đồng phục|uniform|seifuku|sailor/i, tag: "Đồng phục", descVi: "bộ đồng phục" },
+      { regex: /quần tất đen|black pantyhose|black stockings|black tights/i, tag: "Quần tất đen", descVi: "quần tất đen" },
+      { regex: /giày cao gót|high heels|stilettos|heels/i, tag: "Giày cao gót", descVi: "giày cao gót" },
+      { regex: /màu trắng|white/i, tag: "Trắng", colorVi: "trắng" },
+      { regex: /màu đen|black/i, tag: "Đen", colorVi: "đen" },
+      { regex: /màu đỏ|red/i, tag: "Đỏ", colorVi: "đỏ" },
+      { regex: /satin|lụa/i, tag: "Satin/Lụa", matVi: "chất liệu satin mượt mà" },
+      { regex: /ren|lace/i, tag: "Chất liệu Ren", matVi: "phối ren tinh tế" },
+      { regex: /office|công sở|professional/i, tag: "Công sở" }
+    ];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadPrompts();
+      renderPrompts();
+      lucide.createIcons();
+    });
+
+    function loadPrompts() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try {
+          prompts = JSON.parse(stored);
+        } catch (e) {
+          prompts = [...INITIAL_PROMPTS];
+        }
+      } else {
+        prompts = [...INITIAL_PROMPTS];
+        saveToLocalStorage();
+      }
+      
+      prompts.forEach(p => {
+        if (p.isFavorite === undefined) p.isFavorite = false;
+        if (!/9:16/i.test(p.fullPrompt)) {
+          p.fullPrompt = "tỉ lệ khung hình 9:16 " + p.fullPrompt;
+        }
+      });
+    }
+
+    function saveToLocalStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(prompts));
+    }
+
+    function handlePromptInput() {
+      const text = document.getElementById("form-full-prompt").value;
+      const matchedTags = new Set(["Photorealistic"]);
+      const descParts = [];
+
+      KEYWORD_RULES.forEach(rule => {
+        if (rule.regex.test(text)) {
+          matchedTags.add(rule.tag);
+          if (rule.descVi) descParts.push(rule.descVi);
+          if (rule.colorVi) descParts.push(rule.colorVi);
+          if (rule.matVi) descParts.push(rule.matVi);
+        }
+      });
+
+      document.getElementById("form-tags").value = Array.from(matchedTags).join(", ");
+
+      if (descParts.length > 0) {
+        const uniqueDesc = Array.from(new Set(descParts)).join(" kết hợp ");
+        const finalDesc = uniqueDesc.charAt(0).toUpperCase() + uniqueDesc.slice(1) + ".";
+        document.getElementById("form-short-desc").value = finalDesc;
+      } else {
+        document.getElementById("form-short-desc").value = "Mô tả trang phục AI tùy chỉnh";
+      }
+    }
+
+    async function copyToClipboard(text, message) {
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast(message);
+      } catch (err) {
+        const dummy = document.createElement("textarea");
+        document.body.appendChild(dummy);
+        dummy.value = text;
+        dummy.select();
+        try {
+          document.execCommand("copy");
+          showToast(message);
+        } catch (e) {
+          showToast("Không thể sao chép!");
+        }
+        document.body.removeChild(dummy);
+      }
+    }
+
+    function copyQuanTatPrompt() {
+      copyToClipboard(
+        "Thay quần tất nylon màu đen siêu mỏng bán trong suốt có độ bóng mịn phản quan 100%, chất liệu bóng như ướt phản chiếu ánh sáng tự nhiên rõ nét dọc theo dáng chân. Bề mặt da thật có vi kết cấu chân thực, vải có thớ chi tiết, góc nhìn tự nhiên, chất lượng nhiếp ảnh thương mại cao cấp, độ phân giải sắc nét 8k, ánh sáng tự nhiên mềm mại, phục hồi và làm nét mọi chi tiết mờ nhòe. Làm nét ảnh với độ phân giải 8k. Giữ nguyên chi tiết khuôn mặt. Ti lệ ảnh 9:16. Negative Prompt : Thay đổi bối cảnh, thay đổi phông nền, hoạt hình, 3D render, tranh vẽ, minh họa, nét vẽ tay, nhân vật game, hiệu ứng AI giả tạo, da mịn như nhựa, da búp bê, bộ lọc làm đẹp quá đà, mặt bị biến dạng, quần tất mờ lì không bóng, màu sắc quá bão hòa, mờ nhòe, nhiễu hạt, ánh sáng nhân tạo cứng, cắt xén.",
+        "Đã sao chép nội dung Quần tất thành công!"
+      );
+    }
+
+    function copyCrocsPrompt() {
+      copyToClipboard(
+        "Dép clog màu trắng (White Perforated Clog Sandals) Cô gái đi dép clog màu trắng sữa, kiểu dáng đúc nguyên khối, mũi dép bo tròn, phần thân trước có các lỗ thông khí hình bầu dục nhỏ phân bố đều. Đế dép dày vừa phải, có đường viền đế nổi rõ và bề mặt chống trượt. Phần quai dép và cấu trúc gót giữ đúng kiểu dáng clog đơn giản. Chất liệu giống EVA hoặc nhựa xốp đúc nhẹ, bề mặt mờ satin, không quá bóng. Có các chi tiết thông khí và đường viền khuôn đúc chân thực. Dép ôm vừa bàn chân, giữ nguyên vị trí tiếp xúc với sàn gỗ và hướng bàn chân theo ảnh tham chiếu. Màu trắng sạch, có bóng đổ mềm dưới đế, không có họa tiết màu sắc nổi bật hoặc phụ kiện trang trí bổ sung.",
+        "Đã sao chép nội dung Crocs thành công!"
+      );
+    }
+
+    function copyGiayCaoGotPrompt() {
+      copyToClipboard(
+        "Mang giày cao gót nữ màu đen bóng kiểu patent leather, bề mặt da bóng phản chiếu ánh sáng tự nhiên. Gót cao thanh mảnh khoảng 8–10 cm, mũi giày thuôn gọn. Thiết kế có quai mảnh vòng quanh cổ chân, dây cài nhỏ với khóa kim loại tinh tế; có thể kết hợp thêm quai chữ T chạy dọc mu bàn chân. Giày vừa vặn, có hình dáng và cấu trúc rõ ràng, đủ cả hai chiếc. Độ bóng sang trọng, không bóng như nhựa, không biến dạng dây quai hoặc gót giày.",
+        "Đã sao chép nội dung Giày cao gót đen thành công!"
+      );
+    }
+
+    function toggleFavorite(id, event) {
+      if (event) event.stopPropagation();
+      const p = prompts.find(item => item.id === id);
+      if (p) {
+        p.isFavorite = !p.isFavorite;
+        saveToLocalStorage();
+        renderPrompts();
+      }
+    }
+
+    function toggleFavoriteFilter() {
+      filterFavoriteOnly = !filterFavoriteOnly;
+      if (filterFavoriteOnly) selectedTag = null;
+      currentPage = 1;
+      renderPrompts();
+    }
+
+    function handleSearchOrFilter() {
+      currentPage = 1;
+      renderPrompts();
+    }
+
+    function toggleTagFilter(tag) {
+      filterFavoriteOnly = false;
+      selectedTag = (selectedTag === tag) ? null : tag;
+      currentPage = 1;
+      renderPrompts();
+    }
+
+    function clearFilters() {
+      selectedTag = null;
+      filterFavoriteOnly = false;
+      document.getElementById("search-input").value = "";
+      currentPage = 1;
+      renderPrompts();
+    }
+
+    function renderPrompts() {
+      const grid = document.getElementById("prompt-grid");
+      const emptyState = document.getElementById("empty-state");
+      const tagCloud = document.getElementById("tag-cloud");
+      const countEl = document.getElementById("prompt-count");
+      const paginationContainer = document.getElementById("pagination-container");
+      const favBadge = document.getElementById("fav-count-badge");
+
+      const searchQuery = document.getElementById("search-input").value.toLowerCase();
+      favBadge.textContent = prompts.filter(p => p.isFavorite).length;
+
+      const tagCounts = {};
+      prompts.forEach(p => {
+        (p.tags || []).forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; });
+      });
+
+      tagCloud.innerHTML = Object.keys(tagCounts).map(tag => `
+        <button onclick="toggleTagFilter('${tag}')" class="shrink-0 px-2.5 py-1 rounded-xl text-xs font-medium transition flex items-center gap-1 ${selectedTag === tag ? 'bg-indigo-600 text-white' : 'bg-slate-900 text-slate-300 border border-slate-700'}">
+          <span>${tag}</span>
+        </button>
+      `).join('');
+
+      const filtered = prompts.filter(p => {
+        const matchesSearch = p.shortDesc.toLowerCase().includes(searchQuery) || p.fullPrompt.toLowerCase().includes(searchQuery);
+        const matchesTag = selectedTag ? (p.tags && p.tags.includes(selectedTag)) : true;
+        const matchesFav = filterFavoriteOnly ? p.isFavorite : true;
+        return matchesSearch && matchesTag && matchesFav;
+      });
+
+      countEl.textContent = `Hiển thị ${filtered.length} / ${prompts.length} prompt`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        paginationContainer.innerHTML = "";
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+
+      const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+      if (currentPage > totalPages) currentPage = Math.max(1, totalPages);
+      const paginatedItems = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+      grid.innerHTML = paginatedItems.map(p => {
+        const isFav = !!p.isFavorite;
+        return `
+          <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-lg">
+            <div class="space-y-3">
+              <div class="flex items-start justify-between gap-2">
+                <h3 class="text-xs sm:text-sm font-semibold text-slate-100 line-clamp-2 leading-relaxed">${escapeHtml(p.shortDesc)}</h3>
+                <div class="flex items-center gap-1 shrink-0">
+                  <button onclick="toggleFavorite('${p.id}', event)" class="p-2 rounded-xl hover:bg-slate-700 transition">
+                    <span class="text-sm">${isFav ? '❤️' : '🤍'}</span>
+                  </button>
+                  <button onclick="editPrompt('${p.id}')" class="p-2 text-slate-400 hover:text-indigo-400 rounded-xl hover:bg-slate-700 transition">✏️</button>
+                  <button onclick="deletePrompt('${p.id}')" class="p-2 text-slate-400 hover:text-rose-400 rounded-xl hover:bg-slate-700 transition">🗑️</button>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-1">
+                ${(p.tags || []).map(t => `<span class="text-[10px] sm:text-[11px] px-2 py-0.5 rounded-lg bg-indigo-950 text-indigo-300 border border-indigo-800">#${escapeHtml(t)}</span>`).join('')}
+              </div>
+              <div class="bg-slate-950 rounded-xl p-3 border border-slate-800 font-mono text-xs text-slate-300 max-h-32 overflow-y-auto">
+                ${escapeHtml(p.fullPrompt)}
+              </div>
+            </div>
+            <div class="pt-3.5 mt-3 border-t border-slate-700 flex justify-end">
+              <button onclick="copyPromptText(this)" data-prompt="${escapeHtml(p.fullPrompt)}" class="w-full sm:w-auto bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white text-xs font-semibold px-4 py-2.5 rounded-xl border border-indigo-500/30 transition text-center shadow-sm">Sao chép Prompt</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (totalPages > 1) {
+        let paginationHtml = `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-300 disabled:opacity-40">Trước</button>`;
+        for (let i = 1; i <= totalPages; i++) {
+          paginationHtml += `<button onclick="changePage(${i})" class="w-8 h-8 rounded-xl text-xs font-bold ${i === currentPage ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-300'}">${i}</button>`;
+        }
+        paginationHtml += `<button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-300 disabled:opacity-40">Sau</button>`;
+        paginationContainer.innerHTML = paginationHtml;
+      } else {
+        paginationContainer.innerHTML = '';
+      }
+    }
+
+    function changePage(page) {
+      currentPage = page;
+      renderPrompts();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openModal() {
+      document.getElementById("prompt-modal").classList.remove("hidden");
+      document.getElementById("prompt-form").reset();
+      document.getElementById("prompt-id").value = "";
+    }
+
+    function closeModal() {
+      document.getElementById("prompt-modal").classList.add("hidden");
+    }
+
+    function savePrompt(e) {
+      e.preventDefault();
+      const id = document.getElementById("prompt-id").value;
+      let fullPrompt = document.getElementById("form-full-prompt").value.trim();
+      const shortDesc = document.getElementById("form-short-desc").value.trim();
+      const tagsString = document.getElementById("form-tags").value.trim();
+
+      const tags = tagsString ? tagsString.split(',').map(t => t.trim()).filter(t => t.length > 0) : ["Chung"];
+      if (!fullPrompt) return;
+
+      if (!/9:16/i.test(fullPrompt)) {
+        fullPrompt = "tỉ lệ khung hình 9:16 " + fullPrompt;
+      }
+
+      if (id) {
+        const index = prompts.findIndex(p => p.id === id);
+        if (index !== -1) {
+          prompts[index] = { ...prompts[index], fullPrompt, shortDesc: shortDesc || "Mô tả ngắn", tags };
+        }
+      } else {
+        prompts.unshift({
+          id: "p_" + Date.now(),
+          fullPrompt,
+          shortDesc: shortDesc || "Mô tả ngắn",
+          tags,
+          isFavorite: false
+        });
+      }
+
+      saveToLocalStorage();
+      renderPrompts();
+      closeModal();
+    }
+
+    function editPrompt(id) {
+      const p = prompts.find(item => item.id === id);
+      if (!p) return;
+      document.getElementById("prompt-id").value = p.id;
+      document.getElementById("form-full-prompt").value = p.fullPrompt;
+      document.getElementById("form-short-desc").value = p.shortDesc;
+      document.getElementById("form-tags").value = (p.tags || []).join(", ");
+      document.getElementById("prompt-modal").classList.remove("hidden");
+    }
+
+    function deletePrompt(id) {
+      if (confirm("Xóa prompt này?")) {
+        prompts = prompts.filter(p => p.id !== id);
+        saveToLocalStorage();
+        renderPrompts();
+      }
+    }
+
+    async function copyPromptText(buttonEl) {
+      const text = buttonEl.getAttribute('data-prompt');
+      await copyToClipboard(text, "Đã sao chép prompt thành công!");
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      document.getElementById("toast-message").textContent = msg;
+      t.classList.remove("translate-y-[-120px]", "opacity-0");
+      setTimeout(() => { t.classList.add("translate-y-[-120px]", "opacity-0"); }, 2000);
+    }
+
+    function exportSelfContainedHTML() {
+      const currentDoc = document.documentElement.cloneNode(true);
+      let htmlString = "<!DOCTYPE html>\n" + currentDoc.outerHTML;
+      const serializedData = JSON.stringify(prompts, null, 2);
+      htmlString = htmlString.replace(/const INITIAL_PROMPTS = \[[\s\S]*?\];/, `const INITIAL_PROMPTS = ${serializedData};`);
+      
+      const blob = new Blob([htmlString], { type: "text/html;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Prompt_Vault_Backup.html";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+  </script>
+</body></html>
